@@ -1,0 +1,5 @@
+{
+  "DB_USERNAME": "replace_with_your_own_username",
+  "DB_PW": "replace_with_your_own_password",
+  "SESSION_SECRET": "replace_with_your_own_session_secret"
+}
