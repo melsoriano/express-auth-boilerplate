@@ -1,0 +1,24 @@
+{
+  "name": "express-user-auth-guide",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^1.0.3",
+    "body-parser": "^1.18.2",
+    "bookshelf": "^0.12.1",
+    "connect-redis": "^3.3.3",
+    "express": "^4.16.2",
+    "knex": "^0.14.4",
+    "passport": "^0.4.0",
+    "passport-local": "^1.0.0",
+    "path": "^0.12.7",
+    "pg": "^7.4.1"
+  }
+}
