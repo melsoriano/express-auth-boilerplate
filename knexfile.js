@@ -9,11 +9,11 @@ module.exports = {
     connection: {
       host: '127.0.0.1',
       // Replace with your own username
-      user: CONFIG.DB_USERNAME,
+      user: CONFIG.DATABASE.DB_USERNAME,
       // Replace with your own password
-      password: CONFIG.DB_PW,
+      password: CONFIG.DATABASE.DB_PW,
       // Replace with your own database
-      database: 'user_auth_db',
+      database: CONFIG.DATABASE.NAME,
       charset: 'utf8'
     },
     migrations: {

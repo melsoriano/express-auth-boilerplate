@@ -22,6 +22,7 @@ const bodyParser = require('body-parser');
 // create express app
 const app = express();
 
+// requiring database user model
 const User = require('./models/User');
 
 // instantiate body parser
@@ -68,6 +69,7 @@ passport.deserializeUser((user, done) => {
   });
 });
 
+// config local strategy
 passport.use(
   new LocalStrategy((username, password, done) => {
     new User({ username: username })
@@ -77,8 +79,10 @@ passport.use(
           return done(null, false, { message: 'invalid username or password' });
         } else {
           user = user.toJSON();
-          bcrypt.compare(password, user.password).then(res => {
-            if (res) {
+          // compares password stored in db and user input password
+          bcrypt.compare(password, user.password).then(result => {
+            console.log('res???>>>', result);
+            if (result) {
               return done(null, user);
             } else {
               return done(null, false, {
@@ -88,23 +92,21 @@ passport.use(
           });
         }
       })
-      .catch(err => {
-        console.log('error: ', err);
-      });
+      .catch(err => console.log('error: ', err));
   })
 );
 
 /****** ROUTES *******/
 
 app.get('/', (req, res) => {
-  res.send('aloha');
+  res.sendFile(path.join(__dirname + '/index.html'));
 });
 
 // login
 app
   .route('/login')
   .get((req, res) => {
-    res.send('please log in');
+    res.sendFile(path.join(__dirname + '/views/login.html'));
   })
   .post(
     passport.authenticate('local', {
@@ -117,26 +119,25 @@ app
 app
   .route('/register')
   .get((req, res) => {
-    res.send('register');
+    res.sendFile(path.join(__dirname + '/views/register.html'));
   })
   .post((req, res) => {
+    console.log('registering..');
     bcrypt.genSalt(saltRounds, (err, salt) => {
       bcrypt.hash(req.body.password, salt, (err, hash) => {
         let { username } = req.body;
         return new User({ username, password: hash })
           .save()
-          .then(user => {
-            return res.redirect('/login');
-          })
-          .catch(err => {
-            console.log('error message: ', err);
-          });
+          .then(() => res.redirect('/login'))
+          .catch(err => console.log('error msg:', err));
       });
     });
   });
 
+// hidden page to be revealed only after user logs in & is authenticated
 app.get('/secret', isAuthenticated, (req, res) => {
-  res.send('YOU HAVE SUCCESSFULLY ENTERED THE SECRET PAGE ;)');
+  console.log('getting secret');
+  res.sendFile(path.join(__dirname + '/views/secret.html'));
 });
 
 // custom middleware used to secure routes
@@ -150,6 +151,15 @@ function isAuthenticated(req, res, next) {
   }
 }
 
+// logout
+app.get('/logout', (req, res) => {
+  if (req.user) {
+    req.logout();
+  }
+  res.redirect('/');
+});
+
+// listening on PORT
 app.listen(PORT, () => {
   console.log(`Server listening on ${PORT}`);
 });

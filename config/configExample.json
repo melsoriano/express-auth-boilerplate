@@ -1,5 +1,8 @@
 {
-  "DB_USERNAME": "replace_with_your_own_username",
-  "DB_PW": "replace_with_your_own_password",
-  "SESSION_SECRET": "replace_with_your_own_session_secret"
+  "DATABASE": {
+    "NAME": "replace with your own database name",
+    "DB_USERNAME": "replace with your own username",
+    "DB_PW": "replace with your own password"
+  },
+  "SESSION_SECRET": "replace with your own session secret"
 }
