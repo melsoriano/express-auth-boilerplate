@@ -1,7 +1,7 @@
 const express = require('express');
 const path = require('path');
 const PORT = process.env.PORT || 3000;
-const CONFIG = require('./config/config.json');
+const CONFIG = require('../config/config.json');
 
 // authentication middleware
 const passport = require('passport');
@@ -23,7 +23,9 @@ const bodyParser = require('body-parser');
 const app = express();
 
 // requiring database user model
-const User = require('./models/User');
+const User = require('../db/models/User');
+
+const customMidWare = require('../src/js/helpers/customMidWare');
 
 // instantiate body parser
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -121,35 +123,26 @@ app
   .get((req, res) => {
     res.sendFile(path.join(__dirname + '/views/register.html'));
   })
-  .post((req, res) => {
+  .post(customMidWare._passwordValidation, (req, res) => {
     console.log('registering..');
     bcrypt.genSalt(saltRounds, (err, salt) => {
       bcrypt.hash(req.body.password, salt, (err, hash) => {
         let { username } = req.body;
         return new User({ username, password: hash })
           .save()
-          .then(() => res.redirect('/login'))
+          .then(() => {
+            res.redirect('/login');
+          })
           .catch(err => console.log('error msg:', err));
       });
     });
   });
 
 // hidden page to be revealed only after user logs in & is authenticated
-app.get('/secret', isAuthenticated, (req, res) => {
+app.get('/secret', customMidWare._isAuthenticated, (req, res) => {
   console.log('getting secret');
   res.sendFile(path.join(__dirname + '/views/secret.html'));
 });
-
-// custom middleware used to secure routes
-function isAuthenticated(req, res, next) {
-  if (req.isAuthenticated()) {
-    console.log('you may pass');
-    next();
-  } else {
-    console.log('you shall not pass');
-    res.redirect('/login');
-  }
-}
 
 // logout
 app.get('/logout', (req, res) => {

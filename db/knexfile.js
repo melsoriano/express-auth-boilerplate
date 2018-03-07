@@ -1,4 +1,4 @@
-const CONFIG = require('./config/config.json');
+const CONFIG = require('../config/config.json');
 
 /** Don't forget to update your config settings.
  *** Make sure you create your database locally. **/
