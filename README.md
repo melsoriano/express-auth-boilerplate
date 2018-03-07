@@ -1,3 +1,11 @@
+# Getting Started
+
 User authentication boilerplate using express, postgresql, knex, bookshelf, passport, bcrypt, redis.
 
-Check back later for updates.
+### Pre-requisites
+
+Must have the following pre-installed:
+
+* Node
+* Redis Server
+* PostgreSQL
